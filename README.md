@@ -1,11 +1,15 @@
+About symlink-exe-substitute-feedstock
+======================================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/symlink-exe-substitute-feedstock/blob/main/LICENSE.txt)
+
+
 About symlink-exe-substitute
-============================
+----------------------------
 
 Home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
 
 Package license: BSD-3-Clause AND (MIT OR PSF-2.0 OR ZPL-2.1)
-
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/symlink-exe-substitute-feedstock/blob/main/LICENSE.txt)
 
 Summary: Build .exe launchers under %PREFIX%/Scripts as symlink substitutes.
 
@@ -18,6 +22,22 @@ Use this package as a build dependency to workaround the fact that by
 default creating symlinks is not available to non-admin users on Windows.
 Usage is similar to `ln TARGET... DIRECTORY` on Unixes, e.g., run
 `call build-symlink-exe "%PREFIX%\some\dir\your.exe" "%PREFIX%\Scripts"`
+
+
+About symlink-exe-runtime
+-------------------------
+
+Home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
+
+Package license: BSD-3-Clause
+
+Summary: Runtimes needed for .exe files built by symlink-exe-build.
+
+This is an empty, only-dependency-providing package (meta-package).
+The executable launchers built by symlink-exe-build are dynamically
+linked to the C runtime provided by the "strong" "run_exports" from the
+"compiler('c')" packages. As of now, conda-build does not offer
+transitive "run_exports" and as such this package helps to provide them.
 
 
 Current build status
@@ -41,7 +61,7 @@ Current build status
               <td>win_64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=17767&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/symlink-exe-substitute-feedstock?branchName=main&jobName=win&configuration=win_64_" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/symlink-exe-substitute-feedstock?branchName=main&jobName=win&configuration=win%20win_64_" alt="variant">
                 </a>
               </td>
             </tr>
