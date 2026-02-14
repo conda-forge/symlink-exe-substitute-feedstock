@@ -3,7 +3,7 @@ package:
   version: 1.0
 
 build:
-  number: 0
+  number: 1
   skip: true  # [not win]
 
 outputs:
@@ -47,7 +47,7 @@ outputs:
         - m2-bash
         - m2-coreutils
         - m2-sed
-        - {{ compiler("c") }}
+        - vs_win-64
     test:
       requires:
         # Some random packages that have exe files not under %PREFIX%\Scripts.
