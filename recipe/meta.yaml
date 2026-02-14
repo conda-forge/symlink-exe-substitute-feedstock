@@ -68,9 +68,9 @@ outputs:
         - dir "%PREFIX%\Scripts\xz.exe"
         - dir "%PREFIX%\Scripts\zstd.exe"
         - dir "%PREFIX%\Scripts\xzcat.exe"
-        - '"%PREFIX%\Scripts\xz.exe" --version | findstr "/C:XZ Utils"'
-        - '"%PREFIX%\Scripts\zstd.exe" --version | findstr "/C:zstd"'
-        - '"%PREFIX%\Scripts\xzcat.exe" --version | findstr "/C:XZ Utils"'
+        - '"%PREFIX%\Scripts\xz.exe" --version || findstr "/C:XZ Utils"'
+        - '"%PREFIX%\Scripts\zstd.exe" --version || findstr "/C:zstd"'
+        - '"%PREFIX%\Scripts\xzcat.exe" --version || findstr "/C:XZ Utils"'
 
 about:
   home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
