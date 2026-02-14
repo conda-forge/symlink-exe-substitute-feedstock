@@ -11,6 +11,7 @@ outputs:
   - name: symlink-exe-runtime
     requirements:
       build:
+        - {{ stdlib("c") }}
         - {{ compiler("c") }}
       host:
       run:
