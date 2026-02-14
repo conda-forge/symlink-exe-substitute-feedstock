@@ -1,11 +1,15 @@
+About symlink-exe-substitute-feedstock
+======================================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/symlink-exe-substitute-feedstock/blob/main/LICENSE.txt)
+
+
 About symlink-exe-substitute
-============================
+----------------------------
 
 Home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
 
 Package license: BSD-3-Clause AND (MIT OR PSF-2.0 OR ZPL-2.1)
-
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/symlink-exe-substitute-feedstock/blob/main/LICENSE.txt)
 
 Summary: Build .exe launchers under %PREFIX%/Scripts as symlink substitutes.
 
@@ -18,6 +22,22 @@ Use this package as a build dependency to workaround the fact that by
 default creating symlinks is not available to non-admin users on Windows.
 Usage is similar to `ln TARGET... DIRECTORY` on Unixes, e.g., run
 `call build-symlink-exe "%PREFIX%\some\dir\your.exe" "%PREFIX%\Scripts"`
+
+
+About symlink-exe-runtime
+-------------------------
+
+Home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
+
+Package license: BSD-3-Clause
+
+Summary: Runtimes needed for .exe files built by symlink-exe-build.
+
+This is an empty, only-dependency-providing package (meta-package).
+The executable launchers built by symlink-exe-build are dynamically
+linked to the C runtime provided by the "strong" "run_exports" from the
+"compiler('c')" packages. As of now, conda-build does not offer
+transitive "run_exports" and as such this package helps to provide them.
 
 
 Current build status
@@ -41,7 +61,7 @@ Current build status
               <td>win_64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=17767&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/symlink-exe-substitute-feedstock?branchName=main&jobName=win&configuration=win_64_" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/symlink-exe-substitute-feedstock?branchName=main&jobName=win&configuration=win%20win_64_" alt="variant">
                 </a>
               </td>
             </tr>
@@ -126,15 +146,15 @@ available continuous integration services. Thanks to the awesome service provide
 [CircleCI](https://circleci.com/), [AppVeyor](https://www.appveyor.com/),
 [Drone](https://cloud.drone.io/welcome), and [TravisCI](https://travis-ci.com/)
 it is possible to build and upload installable packages to the
-[conda-forge](https://anaconda.org/conda-forge) [Anaconda-Cloud](https://anaconda.org/)
+[conda-forge](https://anaconda.org/conda-forge) [anaconda.org](https://anaconda.org/)
 channel for Linux, Windows and OSX respectively.
 
-To manage the continuous integration and simplify feedstock maintenance
+To manage the continuous integration and simplify feedstock maintenance,
 [conda-smithy](https://github.com/conda-forge/conda-smithy) has been developed.
 Using the ``conda-forge.yml`` within this repository, it is possible to re-render all of
 this feedstock's supporting files (e.g. the CI configuration files) with ``conda smithy rerender``.
 
-For more information please check the [conda-forge documentation](https://conda-forge.org/docs/).
+For more information, please check the [conda-forge documentation](https://conda-forge.org/docs/).
 
 Terminology
 ===========
@@ -161,7 +181,7 @@ merged, the recipe will be re-built and uploaded automatically to the
 everybody to install and use from the `conda-forge` channel.
 Note that all branches in the conda-forge/symlink-exe-substitute-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
-on branches in forks and branches in the main repository should only be used to
+on branches in forks, and branches in the main repository should only be used to
 build distinct package versions.
 
 In order to produce a uniquely identifiable distribution:
@@ -174,5 +194,6 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
+* [@h-vetinari](https://github.com/h-vetinari/)
 * [@mbargull](https://github.com/mbargull/)
 
