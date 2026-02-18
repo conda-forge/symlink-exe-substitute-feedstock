@@ -3,7 +3,7 @@ package:
   version: 1.0
 
 build:
-  number: 0
+  number: 1
   skip: true  # [not win]
 
 outputs:
@@ -11,6 +11,7 @@ outputs:
   - name: symlink-exe-runtime
     requirements:
       build:
+        - {{ stdlib("c") }}
         - {{ compiler("c") }}
       host:
       run:
@@ -47,7 +48,7 @@ outputs:
         - m2-bash
         - m2-coreutils
         - m2-sed
-        - {{ compiler("c") }}
+        - vs_win-64
     test:
       requires:
         # Some random packages that have exe files not under %PREFIX%\Scripts.
@@ -67,9 +68,9 @@ outputs:
         - dir "%PREFIX%\Scripts\xz.exe"
         - dir "%PREFIX%\Scripts\zstd.exe"
         - dir "%PREFIX%\Scripts\xzcat.exe"
-        - '"%PREFIX%\Scripts\xz.exe" --version | findstr "/C:XZ Utils"'
-        - '"%PREFIX%\Scripts\zstd.exe" --version | findstr "/C:zstd"'
-        - '"%PREFIX%\Scripts\xzcat.exe" --version | findstr "/C:XZ Utils"'
+        - '"%PREFIX%\Scripts\xz.exe" --version || findstr "/C:XZ Utils"'
+        - '"%PREFIX%\Scripts\zstd.exe" --version || findstr "/C:zstd"'
+        - '"%PREFIX%\Scripts\xzcat.exe" --version || findstr "/C:XZ Utils"'
 
 about:
   home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
@@ -94,3 +95,4 @@ about:
 extra:
   recipe-maintainers:
     - mbargull
+    - h-vetinari
