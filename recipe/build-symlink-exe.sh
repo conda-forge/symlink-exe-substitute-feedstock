@@ -30,20 +30,31 @@ relpath_targets="$(
 )"
 
 # /FIXED (no base relocations) is rejected by the linker on ARM64 (LNK1246).
-# Detect the target architecture from the environment, falling back to the
-# cl banner, which is authoritative.
-target_arch="$(
-  printf '%s' "${VSCMD_ARG_TGT_ARCH-${Platform-}}" | tr '[:upper:]' '[:lower:]'
-)"
-if [ -z "${target_arch}" ] ; then
-  if { cl 2>&1 || true ; } | head -n 1 | grep -qi 'for ARM64' ; then
-    target_arch=arm64
+# Detect the target architecture: prefer conda's "target_platform", then the
+# Visual Studio environment variables, and finally fall back to the cl banner,
+# which is authoritative.
+is_arm64=
+if [ "${target_platform-}" = "win-arm64" ] ; then
+  is_arm64=1
+elif [ -n "${target_platform-}" ] ; then
+  # Explicitly set to something else (e.g., "win-64"): trust it.
+  is_arm64=
+else
+  target_arch="$(
+    printf '%s' "${VSCMD_ARG_TGT_ARCH-${Platform-}}" | tr '[:upper:]' '[:lower:]'
+  )"
+  if [ "${target_arch}" = "arm64" ] ; then
+    is_arm64=1
+  elif [ -z "${target_arch}" ] &&
+      { cl 2>&1 || true ; } | head -n 1 | grep -qi 'for ARM64' ; then
+    is_arm64=1
   fi
 fi
-case "${target_arch}" in
-  arm64) link_flags= ;;
-  *) link_flags=-FIXED ;;
-esac
+if [ -n "${is_arm64}" ] ; then
+  link_flags=
+else
+  link_flags=-FIXED
+fi
 
 IFS='
 '
