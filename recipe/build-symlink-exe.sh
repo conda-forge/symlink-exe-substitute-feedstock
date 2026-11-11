@@ -29,6 +29,22 @@ relpath_targets="$(
   done | sort
 )"
 
+# /FIXED (no base relocations) is rejected by the linker on ARM64 (LNK1246).
+# Detect the target architecture from the environment, falling back to the
+# cl banner, which is authoritative.
+target_arch="$(
+  printf '%s' "${VSCMD_ARG_TGT_ARCH-${Platform-}}" | tr '[:upper:]' '[:lower:]'
+)"
+if [ -z "${target_arch}" ] ; then
+  if { cl 2>&1 || true ; } | head -n 1 | grep -qi 'for ARM64' ; then
+    target_arch=arm64
+  fi
+fi
+case "${target_arch}" in
+  arm64) link_flags= ;;
+  *) link_flags=-FIXED ;;
+esac
+
 IFS='
 '
 set -- ${relpath_targets}
@@ -50,7 +66,7 @@ for arg do
     cl -O1 -Os -Gy -MD \
       "-DRELATIVE_PATH=\"${rel_path}\"" \
       -Fe"${out_path}\\${basename}" \
-      "${source_file}" -link -FIXED ||
+      "${source_file}" -link ${link_flags} ||
         err_exit "Could not compile \"${out_path}/${basename}\""
     prev_basename="${basename}"
     prev_rel_path="${rel_path}"
