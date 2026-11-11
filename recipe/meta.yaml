@@ -55,25 +55,28 @@ outputs:
       requires:
         # Some random packages that have exe files not under %PREFIX%\Scripts.
         - zstd
-        - xz-tools
-        - lz4-c
+        # win-64: m2-xz installs under %PREFIX%\Library\usr\bin, which gives
+        # us executables from multiple distinct directories (more complex case).
+        - m2-xz  # [target_platform == "win-64"]
+        # win-arm64: no m2-* packages are available, so use native packages.
+        - xz-tools  # [target_platform == "win-arm64"]
+        - lz4-c  # [target_platform == "win-arm64"]
       commands:
         - if exist "%PREFIX%\Scripts\xz.exe" exit 1
         - if exist "%PREFIX%\Scripts\zstd.exe" exit 1
-        - if exist "%PREFIX%\Scripts\lz4.exe" exit 1
+        - if exist "%PREFIX%\Scripts\xzcat.exe" exit 1  # [target_platform == "win-64"]
+        - if exist "%PREFIX%\Scripts\lz4.exe" exit 1  # [target_platform == "win-arm64"]
         - if not exist "%PREFIX%\Scripts\" md "%PREFIX%\Scripts"
-        - >
-          call build-symlink-exe
-          "%PREFIX%\Library\bin\xz.exe"
-          "%PREFIX%\Library\bin\zstd.exe"
-          "%PREFIX%\Library\bin\lz4.exe"
-          "%PREFIX%\Scripts"
+        - call build-symlink-exe "%PREFIX%\Library\usr\bin\xz.exe" "%PREFIX%\Library\bin\zstd.exe" "%PREFIX%\Library\usr\bin\xzcat.exe" "%PREFIX%\Scripts"  # [target_platform == "win-64"]
+        - call build-symlink-exe "%PREFIX%\Library\bin\xz.exe" "%PREFIX%\Library\bin\zstd.exe" "%PREFIX%\Library\bin\lz4.exe" "%PREFIX%\Scripts"  # [target_platform == "win-arm64"]
         - dir "%PREFIX%\Scripts\xz.exe"
         - dir "%PREFIX%\Scripts\zstd.exe"
-        - dir "%PREFIX%\Scripts\lz4.exe"
+        - dir "%PREFIX%\Scripts\xzcat.exe"  # [target_platform == "win-64"]
+        - dir "%PREFIX%\Scripts\lz4.exe"  # [target_platform == "win-arm64"]
         - '"%PREFIX%\Scripts\xz.exe" --version || findstr "/C:XZ Utils"'
         - '"%PREFIX%\Scripts\zstd.exe" --version || findstr "/C:zstd"'
-        - '"%PREFIX%\Scripts\lz4.exe" --version || findstr "/C:lz4"'
+        - '"%PREFIX%\Scripts\xzcat.exe" --version || findstr "/C:XZ Utils"'  # [target_platform == "win-64"]
+        - '"%PREFIX%\Scripts\lz4.exe" --version || findstr "/C:lz4"'  # [target_platform == "win-arm64"]
 
 about:
   home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
