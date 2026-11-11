@@ -1,6 +1,6 @@
 package:
   name: symlink-exe-substitute
-  version: 1.0
+  version: "1.0"
 
 build:
   number: 2
@@ -53,24 +53,25 @@ outputs:
       requires:
         # Some random packages that have exe files not under %PREFIX%\Scripts.
         - zstd
-        - m2w64-xz
+        - xz-tools
+        - lz4-c
       commands:
         - if exist "%PREFIX%\Scripts\xz.exe" exit 1
         - if exist "%PREFIX%\Scripts\zstd.exe" exit 1
-        - if exist "%PREFIX%\Scripts\xzcat.exe" exit 1
+        - if exist "%PREFIX%\Scripts\lz4.exe" exit 1
         - if not exist "%PREFIX%\Scripts\" md "%PREFIX%\Scripts"
         - >
           call build-symlink-exe
-          "%PREFIX%\Library\mingw-w64\bin\xz.exe"
+          "%PREFIX%\Library\bin\xz.exe"
           "%PREFIX%\Library\bin\zstd.exe"
-          "%PREFIX%\Library\mingw-w64\bin\xzcat.exe"
+          "%PREFIX%\Library\bin\lz4.exe"
           "%PREFIX%\Scripts"
         - dir "%PREFIX%\Scripts\xz.exe"
         - dir "%PREFIX%\Scripts\zstd.exe"
-        - dir "%PREFIX%\Scripts\xzcat.exe"
+        - dir "%PREFIX%\Scripts\lz4.exe"
         - '"%PREFIX%\Scripts\xz.exe" --version || findstr "/C:XZ Utils"'
         - '"%PREFIX%\Scripts\zstd.exe" --version || findstr "/C:zstd"'
-        - '"%PREFIX%\Scripts\xzcat.exe" --version || findstr "/C:XZ Utils"'
+        - '"%PREFIX%\Scripts\lz4.exe" --version || findstr "/C:lz4"'
 
 about:
   home: http://github.com/conda-forge/symlink-exe-substitute-feedstock
