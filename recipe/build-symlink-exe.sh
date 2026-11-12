@@ -29,6 +29,33 @@ relpath_targets="$(
   done | sort
 )"
 
+# /FIXED (no base relocations) is rejected by the linker on ARM64 (LNK1246).
+# Detect the target architecture: prefer conda's "target_platform", then the
+# Visual Studio environment variables, and finally fall back to the cl banner,
+# which is authoritative.
+is_arm64=
+if [ "${target_platform-}" = "win-arm64" ] ; then
+  is_arm64=1
+elif [ -n "${target_platform-}" ] ; then
+  # Explicitly set to something else (e.g., "win-64"): trust it.
+  is_arm64=
+else
+  target_arch="$(
+    printf '%s' "${VSCMD_ARG_TGT_ARCH-${Platform-}}" | tr '[:upper:]' '[:lower:]'
+  )"
+  if [ "${target_arch}" = "arm64" ] ; then
+    is_arm64=1
+  elif [ -z "${target_arch}" ] &&
+      { cl 2>&1 || true ; } | head -n 1 | grep -qi 'for ARM64' ; then
+    is_arm64=1
+  fi
+fi
+if [ -n "${is_arm64}" ] ; then
+  link_flags=
+else
+  link_flags=-FIXED
+fi
+
 IFS='
 '
 set -- ${relpath_targets}
@@ -50,7 +77,7 @@ for arg do
     cl -O1 -Os -Gy -MD \
       "-DRELATIVE_PATH=\"${rel_path}\"" \
       -Fe"${out_path}\\${basename}" \
-      "${source_file}" -link -FIXED ||
+      "${source_file}" -link ${link_flags} ||
         err_exit "Could not compile \"${out_path}/${basename}\""
     prev_basename="${basename}"
     prev_rel_path="${rel_path}"
